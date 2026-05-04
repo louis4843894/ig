@@ -20,6 +20,29 @@
             font-size: clamp(1.3rem, 4vw, 2rem);
             margin-bottom: 8px;
         }
+        .ig-link-wrap {
+            text-align: center;
+            margin: 0 0 10px;
+        }
+        .ig-link {
+            display: inline-block;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: clamp(0.95rem, 2.6vw, 1.05rem);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #f58529, #dd2a7b 55%, #8134af);
+            box-shadow: 0 8px 18px rgba(221, 42, 123, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .ig-link:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(221, 42, 123, 0.32);
+        }
+        .ig-link:active {
+            transform: translateY(0);
+        }
         .subtitle {
             text-align: center;
             color: #888;
@@ -84,7 +107,7 @@
             border: 1px solid #eee;
         }
         .img-single img {
-            width: 100%;
+            width: 50%;
             max-width: 320px;
             display: block;
             margin: 16px auto 0;
@@ -117,6 +140,7 @@
 <body>
 
     <h1>📱 如何在 IG 追蹤我 & 傳訊息</h1>
+    <h2 class="ig-link-wrap"><a class="ig-link" href="https://www.instagram.com/82dahyeda?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">前往我的 Instagram</a></h2>
     <p class="subtitle">依照以下步驟，輕鬆和我聯繫！</p>
 
     <!-- 兩區塊並排 -->
@@ -129,15 +153,14 @@
             追蹤 &amp; 直接傳訊息
         </h2>
         <ol class="steps">
-            <li>打開 Instagram，在搜尋欄輸入我的帳號名稱。</li>
-            <li>進入我的個人頁面後，點擊右上角的「<strong>追蹤</strong>」按鈕，即可立即追蹤。</li>
+            <li>點擊上方Instagram連結</li>
+            <li>進入我的個人頁面後，點擊藍色「<strong>追蹤</strong>」按鈕，即可立即追蹤。</li>
             <li>想傳訊息的話，點擊「<strong>傳送訊息</strong>」按鈕，即可直接開啟對話框。</li>
-            <li>輸入你想說的話，按下送出即可！</li>
+            <li>輸入您想說的話，按下送出即可！</li>
         </ol>
         <div class="note">✅ 公開帳號不需要對方同意，追蹤後即可看到所有貼文，訊息也會直接出現在對方的收件匣。</div>
-        <div class="img-grid">
-            <img src="Gemini_Generated_Image_pj1mnupj1mnupj1m.png" alt="公開帳號追蹤示意圖">
-            <img src="Gemini_Generated_Image_mc2483mc2483mc24.png" alt="公開帳號傳訊息示意圖">
+        <div class="img-single">
+            <img src="Gemini_Generated_Image_pj1mnupj1mnupj1m.png" alt="公開帳號追蹤、傳訊息示意圖">
         </div>
     </div>
 
@@ -148,13 +171,15 @@
             申請追蹤 &amp; 傳訊息
         </h2>
         <ol class="steps">
-            <li>打開 Instagram，在搜尋欄輸入我的帳號名稱。</li>
-            <li>進入個人頁面後，點擊「<strong>申請追蹤</strong>」按鈕，等待對方審核。</li>
-            <li>對方接受後，你即可看到貼文，也可以直接點擊「<strong>傳送訊息</strong>」開始聊天。</li>
-            <li>若尚未被接受追蹤，訊息會進入對方的「<strong>訊息請求</strong>」，對方需手動接受才能看到內容。</li>
+            <li>點擊上方Instagram連結</li>
+            <li>進入個人頁面後，點擊藍色「<strong>追蹤</strong>」按鈕，等待對方審核。</li>
+            <li>對方接受後即可看到貼文，也可以直接點擊「<strong>傳送訊息</strong>」開始聊天。</li>
+            <li>若尚未被接受追蹤，則需點擊右上角三個點出現圖二畫面後點擊「傳送訊息」</li>
+            <li>訊息會進入對方的「<strong>訊息請求</strong>」，對方需手動接受才能看到內容。</li>
         </ol>
         <div class="note">🔒 隱私帳號的追蹤需要對方同意，訊息在未接受前會顯示為「請求」狀態，請耐心等候！</div>
-        <div class="img-single">
+        <div class="img-grid">
+            <img src="Gemini_Generated_Image_mc2483mc2483mc24.png" alt="隱私帳號傳訊息示意圖">
             <img src="Gemini_Generated_Image_fciatcfciatcfcia.png" alt="隱私帳號申請追蹤示意圖">
         </div>
     </div>
