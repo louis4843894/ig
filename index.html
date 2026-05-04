@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>如何在 IG 追蹤我 & 傳訊息</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            padding: 24px 16px;
+            max-width: 1200px;
+            margin: auto;
+            background: #fafafa;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            font-size: clamp(1.3rem, 4vw, 2rem);
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 32px;
+            font-size: 0.95rem;
+        }
+        /* 兩區塊並排容器 */
+        .sections-wrapper {
+            display: flex;
+            gap: 24px;
+            align-items: stretch;
+        }
+        .section {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            flex: 1 1 0;
+            min-width: 0;
+        }
+        .section h2 {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-top: 0;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 20px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        .badge-public  { background: #d4edda; color: #2d6a4f; }
+        .badge-private { background: #fde2e4; color: #9b2335; }
+        .steps {
+            padding-left: 20px;
+            margin: 12px 0;
+        }
+        .steps li {
+            margin-bottom: 8px;
+        }
+        .img-grid {
+            display: flex;
+            gap: 12px;
+            flex-wrap: nowrap;
+            margin-top: 16px;
+        }
+        .img-grid img {
+            flex: 1 1 0;
+            width: 50%;
+            min-width: 0;
+            height: auto;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+        .img-single img {
+            width: 100%;
+            max-width: 320px;
+            display: block;
+            margin: 16px auto 0;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+        .note {
+            background: #fff8e1;
+            border-left: 4px solid #f6c90e;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            margin-top: 16px;
+            color: #555;
+        }
+        /* 手機版：兩區塊改為上下排列 */
+        @media (max-width: 640px) {
+            .sections-wrapper {
+                flex-direction: column;
+            }
+            .img-grid {
+                flex-wrap: wrap;
+            }
+            .img-grid img {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📱 如何在 IG 追蹤我 & 傳訊息</h1>
+    <p class="subtitle">依照以下步驟，輕鬆和我聯繫！</p>
+
+    <!-- 兩區塊並排 -->
+    <div class="sections-wrapper">
+
+    <!-- 公開帳號 -->
+    <div class="section">
+        <h2>
+            <span class="badge badge-public">公開帳號</span>
+            追蹤 &amp; 直接傳訊息
+        </h2>
+        <ol class="steps">
+            <li>打開 Instagram，在搜尋欄輸入我的帳號名稱。</li>
+            <li>進入我的個人頁面後，點擊右上角的「<strong>追蹤</strong>」按鈕，即可立即追蹤。</li>
+            <li>想傳訊息的話，點擊「<strong>傳送訊息</strong>」按鈕，即可直接開啟對話框。</li>
+            <li>輸入你想說的話，按下送出即可！</li>
+        </ol>
+        <div class="note">✅ 公開帳號不需要對方同意，追蹤後即可看到所有貼文，訊息也會直接出現在對方的收件匣。</div>
+        <div class="img-grid">
+            <img src="Gemini_Generated_Image_pj1mnupj1mnupj1m.png" alt="公開帳號追蹤示意圖">
+            <img src="Gemini_Generated_Image_mc2483mc2483mc24.png" alt="公開帳號傳訊息示意圖">
+        </div>
+    </div>
+
+    <!-- 隱私帳號 -->
+    <div class="section">
+        <h2>
+            <span class="badge badge-private">隱私帳號</span>
+            申請追蹤 &amp; 傳訊息
+        </h2>
+        <ol class="steps">
+            <li>打開 Instagram，在搜尋欄輸入我的帳號名稱。</li>
+            <li>進入個人頁面後，點擊「<strong>申請追蹤</strong>」按鈕，等待對方審核。</li>
+            <li>對方接受後，你即可看到貼文，也可以直接點擊「<strong>傳送訊息</strong>」開始聊天。</li>
+            <li>若尚未被接受追蹤，訊息會進入對方的「<strong>訊息請求</strong>」，對方需手動接受才能看到內容。</li>
+        </ol>
+        <div class="note">🔒 隱私帳號的追蹤需要對方同意，訊息在未接受前會顯示為「請求」狀態，請耐心等候！</div>
+        <div class="img-single">
+            <img src="Gemini_Generated_Image_fciatcfciatcfcia.png" alt="隱私帳號申請追蹤示意圖">
+        </div>
+    </div>
+    </div><!-- end sections-wrapper -->
+
+</body>
+</html>
