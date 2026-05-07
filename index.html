@@ -20,6 +20,53 @@
             font-size: clamp(1.3rem, 4vw, 2rem);
             margin-bottom: 8px;
         }
+        .lookup-card {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+            padding: 16px;
+            margin: 0 auto 14px;
+            max-width: 560px;
+        }
+        .lookup-title {
+            margin: 0 0 10px;
+            font-size: 1rem;
+            color: #444;
+            text-align: center;
+        }
+        .lookup-form {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .lookup-form input {
+            flex: 1 1 260px;
+            min-width: 180px;
+            border: 1px solid #d6d6d6;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+        .lookup-form button {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #f58529, #dd2a7b 55%, #8134af);
+            box-shadow: 0 6px 14px rgba(221, 42, 123, 0.25);
+        }
+        .lookup-message {
+            margin: 10px 0 0;
+            text-align: center;
+            font-size: 0.93rem;
+            color: #666;
+            min-height: 1.4em;
+        }
         .ig-link-wrap {
             text-align: center;
             margin: 0 0 10px;
@@ -140,7 +187,15 @@
 <body>
 
     <h1>📱 如何在 IG 追蹤我 & 傳訊息</h1>
-    <h2 class="ig-link-wrap"><a class="ig-link" href="https://www.instagram.com/82dahyeda?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">前往我的 Instagram</a></h2>
+    <div class="lookup-card">
+        <p class="lookup-title">先輸入代碼，系統會自動帶你到對應 IG</p>
+        <form id="lookupForm" class="lookup-form">
+            <input id="codeInput" name="code" type="text" placeholder="請輸入代碼，例如 A8K2M9Q1" maxlength="20" required>
+            <button type="submit">查詢代碼</button>
+        </form>
+        <p id="lookupMessage" class="lookup-message"></p>
+    </div>
+    <h2 class="ig-link-wrap"><a id="igDynamicLink" class="ig-link" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">前往我的 Instagram</a></h2>
     <p class="subtitle">依照以下步驟，輕鬆和我聯繫！</p>
 
     <!-- 兩區塊並排 -->
@@ -153,7 +208,7 @@
             追蹤 &amp; 直接傳訊息
         </h2>
         <ol class="steps">
-            <li>點擊上方Instagram連結</li>
+            <li>先輸入代碼並查詢</li>
             <li>進入我的個人頁面後，點擊藍色「<strong>追蹤</strong>」按鈕，即可立即追蹤。</li>
             <li>想傳訊息的話，點擊「<strong>傳送訊息</strong>」按鈕，即可直接開啟對話框。</li>
             <li>輸入您想說的話，按下送出即可！</li>
@@ -171,7 +226,7 @@
             申請追蹤 &amp; 傳訊息
         </h2>
         <ol class="steps">
-            <li>點擊上方Instagram連結</li>
+            <li>先輸入代碼並查詢</li>
             <li>進入個人頁面後，點擊藍色「<strong>追蹤</strong>」按鈕，等待對方審核。</li>
             <li>對方接受後即可看到貼文，也可以直接點擊「<strong>傳送訊息</strong>」開始聊天。</li>
             <li>若尚未被接受追蹤，則需點擊右上角三個點出現圖二畫面後點擊「傳送訊息」</li>
@@ -184,6 +239,44 @@
         </div>
     </div>
     </div><!-- end sections-wrapper -->
+
+    <script>
+        const lookupForm = document.getElementById('lookupForm');
+        const codeInput = document.getElementById('codeInput');
+        const lookupMessage = document.getElementById('lookupMessage');
+        const igDynamicLink = document.getElementById('igDynamicLink');
+
+        lookupForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const code = codeInput.value.trim().toUpperCase();
+            if (!code) {
+                lookupMessage.textContent = '請先輸入代碼。';
+                igDynamicLink.style.display = 'none';
+                return;
+            }
+
+            lookupMessage.textContent = '查詢中...';
+            igDynamicLink.style.display = 'none';
+
+            try {
+                const response = await fetch(`/api/ig-link/${encodeURIComponent(code)}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || '查詢失敗');
+                }
+
+                igDynamicLink.href = data.igUrl;
+                igDynamicLink.textContent = `前往 ${data.name} 的 Instagram`;
+                igDynamicLink.style.display = 'inline-block';
+                lookupMessage.textContent = `代碼 ${data.code} 驗證成功。`;
+            } catch (error) {
+                lookupMessage.textContent = error.message;
+                igDynamicLink.style.display = 'none';
+            }
+        });
+    </script>
 
 </body>
 </html>
