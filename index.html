@@ -14,13 +14,12 @@
             margin: auto;
             background: #fafafa;
             color: #333;
-            background-color: #FF4500; /* 蝦皮橘 fallback，防止舊瀏覽器不支援漸層 */
-            background-image: linear-gradient(45deg, 
-                #405DE6 0%,   /* IG 藍 */
-                #833AB4 25%,  /* IG 紫 */
-                #E1306C 50%,  /* IG 粉 */
-                #FD1D1D 75%,  /* IG 紅/過渡 */
-                #FF4500 100%  /* 蝦皮橘 */
+            background-color: #833AB4; /* IG 紫 fallback */
+            background-image: radial-gradient(circle at center, 
+                #FF4500 0%,   /* 中心：蝦皮橘 */
+                #FD1D1D 30%,  /* 過渡紅 */
+                #E1306C 60%,  /* IG 粉 */
+                #833AB4 100%  /* 邊緣：IG 紫 */
             );
             min-height: 100vh;
         }
