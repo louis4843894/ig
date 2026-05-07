@@ -71,27 +71,59 @@
             display: none;
         }
         .ig-link-wrap {
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
             margin: 0 0 10px;
         }
         .ig-link {
             display: inline-block;
             text-decoration: none;
-            font-weight: 700;
-            font-size: clamp(0.95rem, 2.6vw, 1.05rem);
-            color: #fff;
-            padding: 10px 18px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #f58529, #dd2a7b 55%, #8134af);
-            box-shadow: 0 8px 18px rgba(221, 42, 123, 0.25);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .ig-link img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 28px;
+            display: block;
         }
         .ig-link:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 20px rgba(221, 42, 123, 0.32);
+            transform: translateY(-2px);
+            opacity: 0.9;
         }
         .ig-link:active {
             transform: translateY(0);
+        }
+        .shopee-link {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #fff;
+            width: 90px;
+            height: 90px;
+            border-radius: 28px;
+            background: #EE4D2D;
+            box-shadow: 0 6px 16px rgba(238, 77, 45, 0.35);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+        .shopee-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(238, 77, 45, 0.45);
+            opacity: 0.9;
+        }
+        .shopee-link:active {
+            transform: translateY(0);
+        }
+        .shopee-link svg {
+            flex-shrink: 0;
         }
         .subtitle {
             text-align: center;
@@ -198,7 +230,18 @@
         </form>
         <p id="lookupMessage" class="lookup-message"></p>
     </div>
-    <h2 class="ig-link-wrap"><a id="igDynamicLink" class="ig-link" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">前往我的 Instagram</a></h2>
+    <div class="ig-link-wrap">
+        <a id="igDynamicLink" class="ig-link" href="#" target="_blank" rel="noopener noreferrer" style="display:none;"><img src="ig.png" alt="前往我的 Instagram"></a>
+        <a id="shopeeDynamicLink" class="shopee-link" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 100 110" fill="white" aria-hidden="true">
+              <!-- 購物袋 -->
+              <path d="M50 5C34.5 5 22 17.1 22 32c0 1.8.2 3.5.5 5.2H14L8 88c0 3.9 3.1 7 7 7h70c3.9 0 7-3.1 7-7L86 37.2h-8.5c.3-1.7.5-3.4.5-5.2C78 17.1 65.5 5 50 5zm0 9c10.5 0 19 8.1 19 18 0 1.8-.3 3.5-.8 5.2H31.8c-.5-1.7-.8-3.4-.8-5.2 0-9.9 8.5-18 19-18z"/>
+              <!-- S 字 -->
+              <text x="50" y="78" text-anchor="middle" font-size="32" font-family="Arial, sans-serif" font-weight="900" fill="#EE4D2D" paint-order="stroke" stroke="white" stroke-width="2">S</text>
+            </svg>
+            <span>蝦皮優惠</span>
+        </a>
+    </div>
     <p class="subtitle">依照以下步驟，輕鬆和我聯繫！</p>
 
     <!-- 兩區塊並排 -->
@@ -249,6 +292,7 @@
         const codeInput = document.getElementById('codeInput');
         const lookupMessage = document.getElementById('lookupMessage');
         const igDynamicLink = document.getElementById('igDynamicLink');
+        const shopeeDynamicLink = document.getElementById('shopeeDynamicLink');
 
         const SUPABASE_URL = 'https://omoswccafzpkmbiiayfd.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tb3N3Y2NhZnpwa21iaWlheWZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDE3OTksImV4cCI6MjA5MzcxNzc5OX0.r6pTc6ugDHF5G7V9CF-5F-v6JHy2nMtoZ8pZP3ikKqQ';
@@ -264,9 +308,10 @@
 
             lookupMessage.textContent = '查詢中...';
             igDynamicLink.style.display = 'none';
+            shopeeDynamicLink.style.display = 'none';
 
             try {
-                const endpoint = `${SUPABASE_URL}/rest/v1/ig_profiles?select=code,name,ig_url&code=eq.${encodeURIComponent(code)}&limit=1`;
+                const endpoint = `${SUPABASE_URL}/rest/v1/ig_profiles?select=*&code=eq.${encodeURIComponent(code)}&limit=1`;
                 const response = await fetch(endpoint, {
                     method: 'GET',
                     headers: {
@@ -293,14 +338,22 @@
 
                 codeInput.value = code;
                 igDynamicLink.href = resolvedIgUrl;
-                igDynamicLink.textContent = '前往我的 Instagram';
                 igDynamicLink.style.display = 'inline-block';
+
+                if (data.shopee_url) {
+                    shopeeDynamicLink.href = data.shopee_url;
+                    shopeeDynamicLink.style.display = 'inline-flex';
+                } else {
+                    shopeeDynamicLink.style.display = 'none';
+                }
+
                 lookupCard.classList.add('is-hidden');
                 lookupMessage.textContent = '';
             } catch (error) {
                 lookupCard.classList.remove('is-hidden');
                 lookupMessage.textContent = error.message;
                 igDynamicLink.style.display = 'none';
+                shopeeDynamicLink.style.display = 'none';
             }
         }
 
