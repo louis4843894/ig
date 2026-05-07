@@ -255,13 +255,12 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tb3N3Y2NhZnpwa21iaWlheWZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDE3OTksImV4cCI6MjA5MzcxNzc5OX0.r6pTc6ugDHF5G7V9CF-5F-v6JHy2nMtoZ8pZP3ikKqQ';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        lookupForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const code = codeInput.value.trim().toUpperCase();
+        async function lookupByCode(rawCode) {
+            const code = String(rawCode || '').trim().toUpperCase();
             if (!code) {
                 lookupMessage.textContent = '請先輸入代碼。';
                 igDynamicLink.style.display = 'none';
+                lookupCard.classList.remove('is-hidden');
                 return;
             }
 
@@ -288,6 +287,7 @@
                     throw new Error('回傳資料缺少 IG 連結。');
                 }
 
+                codeInput.value = code;
                 igDynamicLink.href = resolvedIgUrl;
                 igDynamicLink.textContent = '前往我的 Instagram';
                 igDynamicLink.style.display = 'inline-block';
@@ -298,7 +298,18 @@
                 lookupMessage.textContent = error.message;
                 igDynamicLink.style.display = 'none';
             }
+        }
+
+        lookupForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            await lookupByCode(codeInput.value);
         });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const codeFromUrl = urlParams.get('code');
+        if (codeFromUrl) {
+            lookupByCode(codeFromUrl);
+        }
     </script>
 
 </body>
