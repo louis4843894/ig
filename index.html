@@ -243,12 +243,17 @@
     </div>
     </div><!-- end sections-wrapper -->
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const lookupCard = document.getElementById('lookupCard');
         const lookupForm = document.getElementById('lookupForm');
         const codeInput = document.getElementById('codeInput');
         const lookupMessage = document.getElementById('lookupMessage');
         const igDynamicLink = document.getElementById('igDynamicLink');
+
+        const SUPABASE_URL = 'https://omoswccafzpkmbiiayfd.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tb3N3Y2NhZnpwa21iaWlheWZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDE3OTksImV4cCI6MjA5MzcxNzc5OX0.r6pTc6ugDHF5G7V9CF-5F-v6JHy2nMtoZ8pZP3ikKqQ';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         lookupForm.addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -264,14 +269,21 @@
             igDynamicLink.style.display = 'none';
 
             try {
-                const response = await fetch(`/api/ig-link/${encodeURIComponent(code)}`);
-                const data = await response.json();
+                const { data, error } = await supabase
+                    .from('ig_profiles')
+                    .select('code, name, ig_url')
+                    .eq('code', code)
+                    .maybeSingle();
 
-                if (!response.ok) {
-                    throw new Error(data.message || '查詢失敗');
+                if (error) {
+                    throw new Error('查詢失敗，請稍後再試。');
                 }
 
-                const resolvedIgUrl = data.igUrl || data.ig_url;
+                if (!data) {
+                    throw new Error('查無此代碼，請確認後再試。');
+                }
+
+                const resolvedIgUrl = data.ig_url;
                 if (!resolvedIgUrl) {
                     throw new Error('回傳資料缺少 IG 連結。');
                 }
