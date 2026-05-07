@@ -1,63 +1,22 @@
 const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const sqlite3 = require('sqlite3').verbose();
+require('dotenv').config();
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const dbPath = path.join(__dirname, 'db', 'data.db');
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error('資料庫連線失敗:', err.message);
-    process.exit(1);
-  }
-});
-
-function runStatements(sqlContent) {
-  const statements = sqlContent
-    .split(';')
-    .map((s) => s.trim())
-    .filter(Boolean);
-
-  return new Promise((resolve, reject) => {
-    db.serialize(() => {
-      let index = 0;
-
-      const runNext = () => {
-        if (index >= statements.length) {
-          resolve();
-          return;
-        }
-
-        db.run(statements[index], (err) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          index += 1;
-          runNext();
-        });
-      };
-
-      runNext();
-    });
-  });
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.error('缺少 SUPABASE_URL 或 SUPABASE_ANON_KEY，請檢查 .env 設定。');
+  process.exit(1);
 }
 
-async function initDb() {
-  const schemaPath = path.join(__dirname, 'db', 'schema.sql');
-  const seedPath = path.join(__dirname, 'db', 'seed.sql');
-  const schemaSql = fs.readFileSync(schemaPath, 'utf8');
-  const seedSql = fs.readFileSync(seedPath, 'utf8');
-
-  await runStatements(schemaSql);
-  await runStatements(seedSql);
-}
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 app.use(express.static(__dirname));
 
-app.get('/api/ig-link/:code', (req, res) => {
+app.get('/api/ig-link/:code', async (req, res) => {
   const code = String(req.params.code || '').trim().toUpperCase();
 
   if (!code) {
@@ -65,36 +24,31 @@ app.get('/api/ig-link/:code', (req, res) => {
     return;
   }
 
-  db.get(
-    'SELECT code, name, ig_url FROM ig_profiles WHERE code = ? LIMIT 1',
-    [code],
-    (err, row) => {
-      if (err) {
-        res.status(500).json({ message: '查詢失敗，請稍後再試。' });
-        return;
-      }
+  try {
+    const { data, error } = await supabase
+      .from('ig_profiles')
+      .select('code, name, ig_url')
+      .eq('code', code)
+      .maybeSingle();
 
-      if (!row) {
-        res.status(404).json({ message: '查無此代碼，請確認後再試。' });
-        return;
-      }
+    if (error) throw error;
 
-      res.json({
-        code: row.code,
-        name: row.name,
-        igUrl: row.ig_url,
-      });
+    if (!data) {
+      res.status(404).json({ message: '查無此代碼，請確認後再試。' });
+      return;
     }
-  );
+
+    res.json({
+      code: data.code,
+      name: data.name,
+      igUrl: data.ig_url,
+    });
+  } catch (err) {
+    console.error('查詢失敗:', err.message);
+    res.status(500).json({ message: '查詢失敗，請稍後再試。' });
+  }
 });
 
-initDb()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server running at http://localhost:${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error('資料庫初始化失敗:', err.message);
-    process.exit(1);
-  });
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});

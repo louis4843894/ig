@@ -67,6 +67,9 @@
             color: #666;
             min-height: 1.4em;
         }
+        .is-hidden {
+            display: none;
+        }
         .ig-link-wrap {
             text-align: center;
             margin: 0 0 10px;
@@ -187,10 +190,10 @@
 <body>
 
     <h1>📱 如何在 IG 追蹤我 & 傳訊息</h1>
-    <div class="lookup-card">
+    <div id="lookupCard" class="lookup-card">
         <p class="lookup-title">先輸入代碼，系統會自動帶你到對應 IG</p>
         <form id="lookupForm" class="lookup-form">
-            <input id="codeInput" name="code" type="text" placeholder="請輸入代碼，例如 A8K2M9Q1" maxlength="20" required>
+            <input id="codeInput" name="code" type="text" placeholder="請輸入代碼，例如 E7FHI38J" maxlength="20" required>
             <button type="submit">查詢代碼</button>
         </form>
         <p id="lookupMessage" class="lookup-message"></p>
@@ -241,6 +244,7 @@
     </div><!-- end sections-wrapper -->
 
     <script>
+        const lookupCard = document.getElementById('lookupCard');
         const lookupForm = document.getElementById('lookupForm');
         const codeInput = document.getElementById('codeInput');
         const lookupMessage = document.getElementById('lookupMessage');
@@ -267,11 +271,18 @@
                     throw new Error(data.message || '查詢失敗');
                 }
 
-                igDynamicLink.href = data.igUrl;
-                igDynamicLink.textContent = `前往 ${data.name} 的 Instagram`;
+                const resolvedIgUrl = data.igUrl || data.ig_url;
+                if (!resolvedIgUrl) {
+                    throw new Error('回傳資料缺少 IG 連結。');
+                }
+
+                igDynamicLink.href = resolvedIgUrl;
+                igDynamicLink.textContent = '前往我的 Instagram';
                 igDynamicLink.style.display = 'inline-block';
-                lookupMessage.textContent = `代碼 ${data.code} 驗證成功。`;
+                lookupCard.classList.add('is-hidden');
+                lookupMessage.textContent = '';
             } catch (error) {
+                lookupCard.classList.remove('is-hidden');
                 lookupMessage.textContent = error.message;
                 igDynamicLink.style.display = 'none';
             }
