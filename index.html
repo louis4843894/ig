@@ -243,7 +243,6 @@
     </div>
     </div><!-- end sections-wrapper -->
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const lookupCard = document.getElementById('lookupCard');
         const lookupForm = document.getElementById('lookupForm');
@@ -253,7 +252,6 @@
 
         const SUPABASE_URL = 'https://omoswccafzpkmbiiayfd.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tb3N3Y2NhZnpwa21iaWlheWZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNDE3OTksImV4cCI6MjA5MzcxNzc5OX0.r6pTc6ugDHF5G7V9CF-5F-v6JHy2nMtoZ8pZP3ikKqQ';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         async function lookupByCode(rawCode) {
             const code = String(rawCode || '').trim().toUpperCase();
@@ -268,15 +266,21 @@
             igDynamicLink.style.display = 'none';
 
             try {
-                const { data, error } = await supabase
-                    .from('ig_profiles')
-                    .select('code, name, ig_url')
-                    .eq('code', code)
-                    .maybeSingle();
+                const endpoint = `${SUPABASE_URL}/rest/v1/ig_profiles?select=code,name,ig_url&code=eq.${encodeURIComponent(code)}&limit=1`;
+                const response = await fetch(endpoint, {
+                    method: 'GET',
+                    headers: {
+                        apikey: SUPABASE_ANON_KEY,
+                        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+                    },
+                });
 
-                if (error) {
+                if (!response.ok) {
                     throw new Error('查詢失敗，請稍後再試。');
                 }
+
+                const rows = await response.json();
+                const data = rows && rows[0];
 
                 if (!data) {
                     throw new Error('查無此代碼，請確認後再試。');
